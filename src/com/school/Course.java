@@ -1,27 +1,29 @@
 package com.school;
 
+
 public class Course {
-  private static int nextCourseIdCounter = 101; // Start course IDs from 101 and made private
+private static int courseCounter = 0;
+private int courseId;
+private String courseName;
 
-  private int courseId; // Changed to int
-  private String courseName;
 
-  // Constructor
-  public Course(String courseName) {
-    this.courseId = nextCourseIdCounter++; // Auto-increment and assign ID
-    this.courseName = courseName; // Assign course name
-  }
+public Course(String courseName) {
+this.courseId = ++courseCounter;
+this.courseName = courseName;
+}
 
-  public int getCourseId() {
-    return courseId;
-  }
 
-  public String getCourseName() {
-    return courseName;
-  }
+public int getCourseId() {
+return courseId;
+}
 
-  public void displayDetails() {
-    // Displaying courseId with a prefix for better readability
-    System.out.println("Course ID: C" + this.courseId + ", Name: " + this.courseName);
-  }
+
+public String getCourseName() {
+return courseName;
+}
+
+
+public void displayDetails() {
+System.out.printf("Course ID: %d | Name: %s\n", courseId, courseName);
+}
 }
