@@ -7,11 +7,13 @@ import java.util.stream.Collectors; // For filtering
 public class AttendanceService {
     private List<AttendanceRecord> attendanceLog;
     private FileStorageService storageService; // For saving/loading attendance
+    private RegistrationService registrationService; // For lookups
     private final String ATTENDANCE_FILE = "attendance_log.txt"; // Define filename
 
-    public AttendanceService(FileStorageService storageService) {
+    public AttendanceService(FileStorageService storageService, RegistrationService registrationService) {
         this.attendanceLog = new ArrayList<>();
         this.storageService = storageService;
+        this.registrationService = registrationService;
         // In a real app, you'd load existing data here
         // loadAttendanceData();
     }
@@ -27,10 +29,10 @@ public class AttendanceService {
         System.out.println("Attendance marked for " + student.getName() + " in " + course.getCourseName() + " as " + record.getStatus());
     }
 
-    // Overloaded method 2: Mark attendance with IDs (requires lookup)
-    public void markAttendance(int studentId, int courseId, String status, List<Student> allStudents, List<Course> allCourses) {
-        Student student = findStudentById(studentId, allStudents);
-        Course course = findCourseById(courseId, allCourses);
+    // Overloaded method 2: Mark attendance with IDs (uses RegistrationService for lookup)
+    public void markAttendance(int studentId, int courseId, String status) {
+        Student student = registrationService.findStudentById(studentId);
+        Course course = registrationService.findCourseById(courseId);
 
         if (student == null) {
             System.out.println("Error: Student with ID " + studentId + " not found.");
@@ -87,20 +89,7 @@ public class AttendanceService {
         }
     }
 
-    // Helper methods for lookup (could be in a separate utility or respective services)
-    private Student findStudentById(int studentId, List<Student> students) {
-        for (Student s : students) {
-            if (s.getId() == studentId) return s;
-        }
-        return null;
-    }
 
-    private Course findCourseById(int courseId, List<Course> courses) {
-        for (Course c : courses) {
-            if (c.getCourseId() == courseId) return c;
-        }
-        return null;
-    }
 
     // Method to save attendance data
     public void saveAttendanceData() {
