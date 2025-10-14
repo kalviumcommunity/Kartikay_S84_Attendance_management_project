@@ -35,26 +35,40 @@ public class Main {
         registrationService.registerStaff("Jane Doe", "Librarian");
         registrationService.registerStaff("Mike Johnson", "Administrator");
 
-        registrationService.createCourse("Intro to Programming");
-        registrationService.createCourse("Data Structures");
+        registrationService.createCourse("Intro to Programming", 2);
+        registrationService.createCourse("Data Structures", 3);
 
         // Display school directory using RegistrationService
         displaySchoolDirectory(registrationService);
 
-        System.out.println("\n\n--- Marking Attendance (Overloaded Methods) ---");
-        // Get students and courses for attendance marking
+        System.out.println("\n\n--- Course Enrollment ---");
+        // Get students and courses for enrollment
         List<Student> students = registrationService.getStudents();
         List<Course> courses = registrationService.getCourses();
         
-        // 1. Mark attendance using Student and Course objects
+        // Enroll students in courses
+        registrationService.enrollStudentInCourse(students.get(0), courses.get(0)); // Alice in Intro to Programming
+        registrationService.enrollStudentInCourse(students.get(1), courses.get(0)); // Bob in Intro to Programming
+        registrationService.enrollStudentInCourse(students.get(2), courses.get(0)); // Charlie in Intro to Programming (should fail - capacity exceeded)
+        
+        registrationService.enrollStudentInCourse(students.get(0), courses.get(1)); // Alice in Data Structures
+        registrationService.enrollStudentInCourse(students.get(2), courses.get(1)); // Charlie in Data Structures
+        
+        System.out.println("\n--- Course Details After Enrollment ---");
+        for (Course course : courses) {
+            course.displayDetails();
+        }
+
+        System.out.println("\n\n--- Marking Attendance (Overloaded Methods) ---");
+        // 1. Mark attendance using Student and Course objects (for enrolled students)
         attendanceService.markAttendance(students.get(0), courses.get(0), "Present");
         attendanceService.markAttendance(students.get(1), courses.get(0), "Absent");
 
         // 2. Mark attendance using studentId and courseId (uses RegistrationService for lookup)
         // Alice (ID 1) in Data Structures (ID C102)
         attendanceService.markAttendance(students.get(0).getId(), courses.get(1).getCourseId(), "Present");
-        // Charlie (ID 3) in Intro to Programming (ID C101)
-        attendanceService.markAttendance(students.get(2).getId(), courses.get(0).getCourseId(), "Late");
+        // Charlie (ID 3) in Data Structures (ID C102) - Charlie is enrolled in this course
+        attendanceService.markAttendance(students.get(2).getId(), courses.get(1).getCourseId(), "Late");
 
 
         System.out.println("\n\n--- Querying Attendance (Overloaded Methods) ---");
@@ -72,6 +86,6 @@ public class Main {
         registrationService.saveAllRegistrations(); // Save students, teachers, staff, and courses
         attendanceService.saveAttendanceData(); // Save attendance log
 
-        System.out.println("\nPart 9: RegistrationService Integration Complete.");
+        System.out.println("\nPart 10: Course Capacity and Enrollment Complete.");
     }
 }
