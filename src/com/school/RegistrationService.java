@@ -43,10 +43,10 @@ public class RegistrationService {
         System.out.println("Staff member registered: " + staff.getName() + " (ID: " + staff.getId() + ")");
     }
 
-    public void createCourse(String courseName) {
-        Course course = new Course(courseName);
+    public void createCourse(String courseName, int capacity) {
+        Course course = new Course(courseName, capacity);
         courses.add(course);
-        System.out.println("Course created: " + course.getCourseName() + " (ID: C" + course.getCourseId() + ")");
+        System.out.println("Course created: " + course.getCourseName() + " (ID: C" + course.getCourseId() + ", Capacity: " + capacity + ")");
     }
 
     // Getter methods
@@ -83,6 +83,17 @@ public class RegistrationService {
             }
         }
         return null;
+    }
+
+    // Enrollment method
+    public boolean enrollStudentInCourse(Student student, Course course) {
+        boolean success = course.addStudent(student);
+        if (success) {
+            System.out.println("Successfully enrolled " + student.getName() + " in " + course.getCourseName());
+        } else {
+            System.out.println("Failed to enroll " + student.getName() + " in " + course.getCourseName() + " - Course is at capacity");
+        }
+        return success;
     }
 
     // Get all people method
